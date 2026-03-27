@@ -3,29 +3,35 @@ import streamlit as st
 
 st.set_page_config(page_title="LLM API Presentation", layout="wide")
 
+
 st.markdown("""
     <style>
-    /* Main Background and Text Color */
     .stApp {
         background-color: #0f172a;
         color: white;
     }
-    /* Increasing Global Font Sizes for Slide Look */
-    html, body, [class*="st-"] {
-        font-size: 20px; 
-    }
-    h1 { font-size: 55px !important; color: #38bdf8 !important; } /* Main Title */
-    h2 { font-size: 45px !important; color: #f472b6 !important; } /* Section Headers */
-    p, li { font-size: 26px !important; line-height: 1.6; } /* Body Text */
+    /* Typography */
+    html, body, [class*="st-"] { font-size: 20px; }
+    h1 { font-size: 55px !important; color: #38bdf8 !important; margin-bottom: 30px; }
+    h2 { font-size: 45px !important; color: #f472b6 !important; border-bottom: 2px solid #1e293b; padding-bottom: 10px; }
+    p, li { font-size: 26px !important; line-height: 1.6; }
     
-    /* Center aligning image captions */
-    .stImage > div > div > p {
-        text-align: center;
-        font-size: 18px !important;
-        color: #94a3b8;
+    /* Cinematic Image Styling */
+    .slide-img {
+        border-radius: 15px;
+        border: 1px solid #334155;
+        box-shadow: 0px 10px 30px rgba(0,0,0,0.6);
+        margin-top: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
     </style>
 """, unsafe_allow_html=True)
+
+def render_image(path):
+    # Adjust width percentage (70-80% is usually the "sweet spot" for slides)
+    st.image(path, use_container_width=True)
 
 st.title("How to Use LLM API")
 
@@ -38,12 +44,7 @@ page = st.sidebar.selectbox(
 if page == "Home":
     st.header("Welcome")
     st.write("This application will guide you through the fundamentals of LLM APIs step-by-step.")
-    
-
-    col1, col2, col3 = st.columns([1, 1.5, 1]) 
-    with col2:
-        st.image("HOME.jpg.png", use_container_width=True)
-
+    render_image("HOME.jpg.png")
 
 elif page == "What is LLM":
     st.header("What is LLM?")
@@ -52,69 +53,51 @@ elif page == "What is LLM":
     * It is an AI system trained on massive datasets to understand and generate human-like text.
     * **Key Examples:** OpenAI's GPT-4, Google's Gemini, and Meta's Llama.
     """)
-    
-    col1, col2, col3 = st.columns([1, 1.5, 1])
-    with col2:
-        st.image("llm.jpg.png", use_container_width=True)
-
+    render_image("llm.jpg.png")
 
 elif page == "What is API":
     st.header("What is API?")
     st.write("""
     * An **API** (Application Programming Interface) is a software intermediary.
     * It allows two applications to **talk to each other**.
-    * Think of it as a messenger that delivers your request to the provider and then delivers the response back to you.
+    * Think of it as a messenger that delivers your request and brings the response back.
     """)
-    
-    col1, col2, col3 = st.columns([1, 1.5, 1])
-    with col2:
-        st.image("API.jpg.png", use_container_width=True)
-
+    render_image("API.jpg.png")
 
 elif page == "How API Works":
     st.header("How LLM API Works")
     st.write("""
-    1. **Client Request:** Your app sends a prompt (text) via the API.
-    2. **Authentication:** The API checks your API Key for permission.
-    3. **Processing:** The LLM server generates a response based on your prompt.
-    4. **Data Return:** The API sends the text back to your application interface.
+    1. **Client Request:** Your app sends a prompt via the API.
+    2. **Authentication:** The API checks your API Key.
+    3. **Processing:** The LLM server generates a response.
+    4. **Data Return:** The API sends text back to your app.
     """)
-    
-    col1, col2, col3 = st.columns([1, 1.5, 1])
-    with col2:
-        st.image("API works.jpg.png", use_container_width=True)
-
+    render_image("API works.jpg.png")
 
 elif page == "Code Example":
     st.header("Basic Python Implementation")
-    st.write("Here is how simple it is to call an LLM API using the OpenAI library:")
+    st.write("Here is how simple it is to call an LLM API using Python:")
     
     code = '''
 from openai import OpenAI
 
-# Initialize the client
 client = OpenAI(api_key="your_api_key_here")
 
-# Create a completion request
 response = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[{"role": "user", "content": "Explain APIs to a 5th grader."}]
 )
 
-# Print the result
 print(response.choices[0].message.content)
 '''
     st.code(code, language="python")
-
 
 elif page == "Live Demo":
     from openai import OpenAI
     import os
     from dotenv import load_dotenv
 
-    load_dotenv() # Loads your key from the .env file
-    
-   
+    load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     
     st.header("Live Interactive Demo")
@@ -138,3 +121,4 @@ elif page == "Live Demo":
                         st.error(f"An error occurred: {e}")
             else:
                 st.warning("Please enter a prompt first.")
+               
